@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsoft.domains.employee">
+
+    <resultMap id="employeeResultMap" type="com.tsoft.domains.employee.entity.Employee">
+        <id column="id" property="id"/>
+        <result column="employee_number" property="employeeNumber"/>
+        <result column="name" property="name"/>
+        <result column="english_name" property="englishName"/>
+        <result column="branchOffice_id" property="branchOfficeId"/>
+        <result column="branchOffice" property="branchOffice"/>
+        <result column="department_id" property="departmentId"/>
+        <result column="department" property="department"/>
+        <result column="isLeave" property="isLeave"/>
+        <result column="documentType_id" property="documentTypeId"/>
+        <result column="documentType" property="documentType"/>
+        <result column="documentNumber" property="documentNumber"/>
+        <result column="cellPhone" property="cellPhone"/>
+        <result column="workPhone" property="workPhone"/>
+        <result column="inductionTime" property="inductionTime"/>
+        <result column="employmentRelationship_id" property="employmentRelationshipId"/>
+        <result column="employmentRelationship" property="employmentRelationship"/>
+        <result column="mailbox" property="mailbox"/>
+    </resultMap>
+
+    <!-- 传递进来的是一个对象，如需使用#{id}，必须保证 实体类里有id属性，Mybatis会自动在对象里找id属性 -->
+    <select id="findarchives"  resultMap="employeeResultMap">
+        select ta.*, p.name as branchOffice, p1.name as department, p2.name as documentType, p3.name as employmentRelationship from archives ta
+        left join parameter p on ta.branchOffice_id=p.id
+        left join parameter p1 on ta.department_id=p1.id
+        left join parameter p2 on ta.documentType_id=p2.id
+        left join parameter p3 on ta.employmentRelationship_id=p3.id
+        where 1=1
+        <if test="id!=null">
+            and ta.id=#{id}
+        </if>
+        <if test="employeeNumber!=null and employeeNumber!=''">
+            and ta.employee_number=#{employeeNumber}
+        </if>
+        <if test="name!=null and name!=''">
+            and ta.name=#{name}
+        </if>
+        <if test="englishName!=null and englishName!=''">
+            and ta.english_name=#{englishName}
+        </if>
+        <if test="branchOffice!=null and branchOffice!=''">
+            and ta.branchOffice_id=#{branchOffice}
+        </if>
+        <if test="department!=null and department!=''">
+            and ta.department_id=#{department}
+        </if>
+        <if test="isLeave!=null and isLeave!=''">
+            and ta.isLeave=#{isLeave}
+        </if>
+    </select>
+
+    <insert id="insertarchives">
+        insert into archives(employee_number,name,english_name,documentType_id,documentNumber,employmentRelationship_id,branchOffice_id,department_id,cellPhone,workPhone,inductionTime,mailbox)
+        values(#{employeeNumber},#{name},#{englishName},#{documentType},#{documentNumber},#{employmentRelationship},#{branchOffice},#{department},#{cellPhone},#{workPhone},#{inductionTime},#{mailbox})
+    </insert>
+
+    <update id="updatearchives">
+        update archives t set t.employee_number=#{employeeNumber},t.name=#{name},t.english_name=#{englishName},t.documentType_id=#{documentType},t.documentNumber=#{documentNumber},
+        t.employmentRelationship_id=#{employmentRelationship},t.branchOffice_id=#{branchOffice},t.department_id=#{department},t.cellPhone=#{cellPhone},t.workPhone=#{workPhone},
+        t.inductionTime=#{inductionTime},t.mailbox=#{mailbox}
+        where t.id=#{id}
+    </update>
+
+    <delete id="deletearchives">
+        delete from archives where id = #{id}
+    </delete>
+
+ <!--   <select id="selectTests" parameterType="int" resultType="com.ss.Test">
+        select * from test where name=#{name}
+    </select>-->
+</mapper>

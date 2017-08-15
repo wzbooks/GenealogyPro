@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="defaultExecutorType" value="REUSE"/>
+    </settings>
+
+    <mappers>
+        <!-- 注册TestMapper.xml文件， TestMapper.xml位于com.ss这个包下，所以resource写成com/ss/security.xml -->
+        <mapper resource="security.xml" />
+        <mapper resource="employee.xml" />
+    </mappers>
+
+</configuration>

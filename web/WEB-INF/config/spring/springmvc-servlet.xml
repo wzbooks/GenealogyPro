@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- 自动扫描Controller的包名-->
+    <context:component-scan base-package="com.tsoft"/>
+
+    <!-- 自动扫描ervice,repository的包名-->
+  <!--  <context:component-scan base-package="com.tsoft.domains"/>-->
+    <!-- 默认的注解映射的支持，自动注册DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter -->
+    <mvc:annotation-driven />
+    <!--配置静态资源拦截-->
+    <mvc:default-servlet-handler />
+    <!-- 视图解释类 -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/pages/" p:viewClass="org.springframework.web.servlet.view.JstlView"
+          p:suffix=".jsp" />
+
+    <context:property-placeholder location="classpath*:sysconfig.properties"/>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="dataSource" p:configLocation="WEB-INF/config/mybatis/mybatisconfig.xml"/>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close" init-method="init" p:driverClassName="${jdbc.driverClassName}"
+          p:url="${jdbc.url}"
+          p:connectionProperties="config.decrypt=true;druid.stat.slowSqlMillis=50000;druid.stat.logSlowSql=true"
+          p:username="${jdbc.username}" p:removeAbandoned="true" p:removeAbandonedTimeout="3600" p:logAbandoned="true"
+          p:password="${jdbc.password}" p:minIdle="1"
+          p:maxActive="100" p:poolPreparedStatements="true" p:maxPoolPreparedStatementPerConnectionSize="20"
+          p:initialSize="1" p:maxWait="60000" p:timeBetweenEvictionRunsMillis="60000"
+          p:validationQuery="select * from dual"
+          p:filters="config,stat,slf4j"/>
+
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>
+

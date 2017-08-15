@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsoft.domains.security">
+    <!-- 在select标签中编写查询的SQL语句， 设置select标签的id属性为getUser，id属性值必须是唯一的，不能够重复 使用parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型
+        resultType="com.ss.Test"就表示将查询结果封装成一个Test类的对象返回 User类就是users表所对应的实体类 -->
+
+<!--    <insert id="addTest" parameterType="com.ss.Test">
+        insert into test(name,age) values(#{name},#{age})
+    </insert>
+
+    <delete id="deleteTest" parameterType="int">
+        delete from test where id=#{id}
+    </delete>
+
+    <update id="updateTest" parameterType="com.ss.Test">
+        update test set name=#{name},age=#{age} where id=#{id}
+    </update>-->
+
+    <select id="queryParameter" parameterType="com.tsoft.domains.security.entity.Parameter" resultType="com.tsoft.domains.security.entity.Parameter">
+        select t.* from parameter t
+        where 1=1
+        <if test="type!=null">
+            and t.type=#{type}
+        </if>
+        <if test="id!=null">
+            and t.id=#{id}
+        </if>
+    </select>
+
+    <!-- 传递进来的是一个对象，如需使用#{id}，必须保证 实体类里有id属性，Mybatis会自动在对象里找id属性 -->
+    <select id="selectTest" parameterType="int" resultType="com.tsoft.domains.Test.entity.Test">
+        select * from test where id=#{id}
+    </select>
+
+ <!--   <select id="selectTests" parameterType="int" resultType="com.ss.Test">
+        select * from test where name=#{name}
+    </select>-->
+</mapper>
